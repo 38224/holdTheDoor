@@ -10,6 +10,9 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.holdthedoor.Object.Enemy;
+import com.example.holdthedoor.Object.Player;
+
 import java.text.DecimalFormat;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -31,7 +34,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(275,700,70,40);
         player = new Player(getContext(),joystick,500,500,30);
 
-        enemy = new Enemy();
+        enemy = new Enemy(getContext(),player,500,900,30);
         setFocusable(true);
     }
 
@@ -82,6 +85,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
         joystick.draw(canvas);
         player.draw(canvas);
+        enemy.draw(canvas);
     }
 
     public void drawUPS( Canvas canvas) {
@@ -104,5 +108,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         joystick.update();
         player.update();
+        enemy.update();
     }
 }
