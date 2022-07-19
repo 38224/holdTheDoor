@@ -10,10 +10,12 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.example.holdthedoor.Object.Circle;
-import com.example.holdthedoor.Object.Enemy;
-import com.example.holdthedoor.Object.Player;
-import com.example.holdthedoor.Object.Spell;
+import com.example.holdthedoor.gameobject.Circle;
+import com.example.holdthedoor.gameobject.Enemy;
+import com.example.holdthedoor.gameobject.Player;
+import com.example.holdthedoor.gameobject.Spell;
+import com.example.holdthedoor.gamepanel.GameOver;
+import com.example.holdthedoor.gamepanel.Joystick;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -28,10 +30,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private List<Spell> spellList = new ArrayList<Spell>();
     private GameLoop gameLoop;
 
-    private static final DecimalFormat df = new DecimalFormat("0.00");
     private int playerScore =0;
     private int joystickPointerId = 0;
     private int numberOfSpellsToCast = 0;
+    private GameOver gameOver;
+    private Performance performance;
 
     public Game(Context context) {
         super(context);
@@ -41,8 +44,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         gameLoop = new GameLoop( this, surfaceHolder);
 
-        //initialize game objects
+        //initialize game panels
+        performance = new Performance(context,gameLoop);
+        gameOver = new GameOver(context);
         joystick = new Joystick(275,700,70,40);
+
+        //initialize game objects
+
         player = new Player(getContext(),joystick,500,500,30);
 
         setFocusable(true);
@@ -59,6 +67,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     numberOfSpellsToCast++; // joystick was pressed before this event
                 }else if(joystick.isPressed((double) event.getX(),(double) event.getY())){
                     // joystick is pressed in this event
+                    if(player.getHealthPoints() <= 0) resetGame();
                     joystickPointerId = event.getPointerId(event.getActionIndex());
                     joystick.setIsPressed(true);
                 }else{
@@ -87,6 +96,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         return super.onTouchEvent(event);
     }
 
+    public void resetGame(){
+        player.setHealthPoints(player.MAX_HEALTH_POINTS);
+        playerScore = 0;
+    }
+
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         gameLoop.startLoop();
@@ -105,10 +119,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        drawUPS(canvas);
-        drawFPS(canvas);
-        drawScore(canvas);
-        joystick.draw(canvas);
+
+
+        //draw game objects
         player.draw(canvas);
         for(Enemy enemy : enemyList){
             enemy.draw(canvas);
@@ -116,24 +129,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for(Spell spell : spellList){
             spell.draw(canvas);
         }
+        //draw game panels
+        joystick.draw(canvas);
+        performance.draw(canvas);
+
+        //draw  SCORE
+        drawScore(canvas);
+
+
+
+        // draw Game over if the player is dead
+        if( player.getHealthPoints() <= 0){
+            gameOver.draw(canvas);
+        }
     }
 
-    public void drawUPS( Canvas canvas) {
-        String averageUPS = df.format(gameLoop.getAverageUPS());
-        Paint paint = new Paint();
-        int color = ContextCompat.getColor(getContext(), R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(60);
-        canvas.drawText("UPS: " + averageUPS, 120, 100, paint);
-    }
-    public void drawFPS( Canvas canvas) {
-        String averageFPS = df.format(gameLoop.getAverageFPS());
-        Paint paint = new Paint();
-        int color = ContextCompat.getColor(getContext(), R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(60);
-        canvas.drawText("FPS: " + averageFPS, 120, 160, paint);
-    }
+
     public void drawScore( Canvas canvas){
         Paint paint = new Paint();
         int color = ContextCompat.getColor(getContext(), R.color.magenta);
@@ -143,6 +154,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+
+        // stop updating the game if the player is dead
+        if(player.getHealthPoints() <= 0) return;
+
         joystick.update();
         player.update();
         if(Enemy.readyToSpawn()){
@@ -161,6 +176,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for(Spell spell : spellList){
             spell.update();
         }
+
+
 
         //iterate enemy list and check for collision between each enemy and the player
         Iterator<Enemy> iteratorEnemy = enemyList.iterator();

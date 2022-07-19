@@ -1,10 +1,10 @@
-package com.example.holdthedoor;
+package com.example.holdthedoor.gamepanel;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.example.holdthedoor.Object.Utils;
+import com.example.holdthedoor.gameobject.Utils;
 
 public class Joystick {
 

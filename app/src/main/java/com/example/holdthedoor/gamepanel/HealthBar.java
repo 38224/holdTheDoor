@@ -1,4 +1,4 @@
-package com.example.holdthedoor.Object;
+package com.example.holdthedoor.gamepanel;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import androidx.core.content.ContextCompat;
 
 import com.example.holdthedoor.R;
+import com.example.holdthedoor.gameobject.Player;
 
 /**
  * HealthBar displays the player health to the screen

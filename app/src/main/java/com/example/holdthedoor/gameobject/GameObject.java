@@ -1,4 +1,4 @@
-package com.example.holdthedoor.Object;
+package com.example.holdthedoor.gameobject;
 
 import android.graphics.Canvas;
 //GameObject is an abstract class which is the foundation of all world objects in the game
@@ -26,11 +26,11 @@ public abstract class GameObject {
     public abstract  void update();
 
 
-    protected double getPositionX() {
+    public double getPositionX() {
         return positionX;
     }
 
-    protected double getPositionY() {
+    public double getPositionY() {
         return positionY;
     }
 

@@ -1,4 +1,4 @@
-package com.example.holdthedoor.Object;
+package com.example.holdthedoor.gameobject;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,8 @@ import android.graphics.Canvas;
 import androidx.core.content.ContextCompat;
 
 import com.example.holdthedoor.GameLoop;
-import com.example.holdthedoor.Joystick;
+import com.example.holdthedoor.gamepanel.HealthBar;
+import com.example.holdthedoor.gamepanel.Joystick;
 import com.example.holdthedoor.R;
 
 public class Player extends Circle{

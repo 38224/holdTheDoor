@@ -1,7 +1,6 @@
-package com.example.holdthedoor.Object;
+package com.example.holdthedoor.gameobject;
 
 import android.content.Context;
-import android.graphics.Canvas;
 
 import androidx.core.content.ContextCompat;
 
