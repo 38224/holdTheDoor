@@ -6,6 +6,8 @@ import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.holdthedoor.Game;
+import com.example.holdthedoor.GameDisplay;
 import com.example.holdthedoor.R;
 import com.example.holdthedoor.gameobject.Player;
 
@@ -34,7 +36,7 @@ public class HealthBar {
         healthPaint.setColor(healthColor);
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
         float x = (float) player.getPositionX();
         float y = (float) player.getPositionY();
         float healthPointPercentage = (float) player.getHealthPoints()/player.MAX_HEALTH_POINTS;
@@ -45,7 +47,12 @@ public class HealthBar {
         borderRight = x + width/2;
         borderBottom = y - distanceToPlayer;
         borderTop = borderBottom - height;
-        canvas.drawRect(borderLeft,borderTop,borderRight,borderBottom,borderPaint);
+        canvas.drawRect(
+                (float) gameDisplay.gameToDisplayCoordinateX(borderLeft),
+                (float) gameDisplay.gameToDisplayCoordinateY(borderTop),
+                (float) gameDisplay.gameToDisplayCoordinateX(borderRight),
+                (float) gameDisplay.gameToDisplayCoordinateY(borderBottom),
+                borderPaint);
 
         //draw health
         float healthLeft,healthTop,healthRight,healthBottom,healthWidth,healthHeight;
@@ -56,6 +63,11 @@ public class HealthBar {
         healthBottom = borderBottom - margin;
         healthTop = healthBottom - healthHeight;
 
-        canvas.drawRect(healthLeft,healthTop,healthRight,healthBottom,healthPaint);
+        canvas.drawRect(
+                (float) gameDisplay.gameToDisplayCoordinateX(healthLeft),
+                (float) gameDisplay.gameToDisplayCoordinateY(healthTop),
+                (float) gameDisplay.gameToDisplayCoordinateX(healthRight),
+                (float) gameDisplay.gameToDisplayCoordinateY(healthBottom),
+                healthPaint);
     }
 }
